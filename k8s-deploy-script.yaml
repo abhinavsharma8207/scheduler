@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: tora-scheduler
+  name: tora-scheduler
+  namespace: $KUBE_NAMESPACE
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tora-scheduler
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: tora-scheduler
+    spec:
+      containers:
+        - image: $DOCKER_IMAGE_TAG
+          imagePullPolicy: Always
+          name: tora-scheduler
+          ports:
+            - containerPort: 9401
+          env:
+            - name: TORA_API_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: dmi-common-configs
+                  key: TORA_API_HOST_URL
+            - name: TWINT_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: dmi-common-configs
+                  key: TWINT_HOST
+            - name: INSTAGRAM_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: dmi-common-configs
+                  key: INSTAGRAM_HOST
+            - name: TWITTER_INFLUENCER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: dmi-common-configs
+                  key: TWITTER_INFLUENCER_HOST
+            - name: TWITTER_INTERACTIONS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: dmi-common-configs
+                  key: TWITTER_INTERACTIONS_HOST
+            - name: INSTAGRAM_INFLUENCER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: dmi-common-configs
+                  key: INSTAGRAM_INFLUENCER_HOST
+            - name: ELASTIC_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: dmi-common-configs
+                  key: ELASTIC_HOST
+            - name: ELASTIC_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: dmi-common-configs
+                  key: ELASTIC_PORT
+            - name: ELASTIC_SCHEME
+              valueFrom:
+                configMapKeyRef:
+                  name: dmi-common-configs
+                  key: ELASTIC_SCHEME
+            - name: TWITTER_KEYWORDS_SPLIT_COUNT
+              value: '5'
+            - name: INSTAGRAM_KEYWORDS_SPLIT_COUNT
+              value: '25'
+            - name: TWITTER_USERS_SPLIT_COUNT
+              value: '100'
+            - name: TWITTER_STREAM_ENABLED
+              value: 'true'
+            - name: TWITTER_STREAM_INTERACTIONS_ENABLED
+              value: 'true'
+            - name: INSTAGRAM_STREAM_ENABLED
+              value: 'true'
+            - name: TWITTER_STREAM_INFLUENCER_METRICS_ENABLED
+              value: 'true'
+            - name: TORA_TWITTER_INTERACTIONS_INSTANCES_COUNT
+              value: '3'
+            - name: TWEETS_FIXEDRATE_IN_MILLISECONDS
+              value: '1800000'
+            - name: TWITTERINFLUENCERMETRICS_FIXEDRATE_IN_MILLISECONDS
+              value: '1800000'
+            - name: TWEETS_INITIALDELAY_IN_MILLISECONDS
+              value: '120000'
+            - name: TWITTERINFLUENCERMETRICS_INITIALDELAY_IN_MILLISECONDS
+              value: '900000'
+            - name: RETWEETSLIKES_FIXEDRATE_IN_MILLISECONDS
+              value: '600000'
+            - name: POSTS_FIXEDRATE_IN_MILLISECONDS
+              value: '10800000'
+            - name: INSTAGRAM_INFLUENCER_METRICS_INITIALDELAY_IN_MILLISECONDS
+              value: '240000'
+            - name: INSTAGRAM_INFLUENCER_METRICS_FIXEDRATE_IN_MILLISECONDS
+              value: '1800000'
+            - name: INSTAGRAM_STREAM_INFLUENCER_METRICS_ENABLED
+              value: 'true'
+            - name: INSTAGRAM_USERS_SPLIT_COUNT
+              value: '100'
+            - name : ELASTIC_INDEX_KEYWORDS
+              value: 'keywords'
+
+      imagePullSecrets:
+        - name: registry-cred
+status: {}
+
+---
